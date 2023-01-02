@@ -1,2 +1,3 @@
 export * from "./load-pokemon-list";
-export * from "./load-url-list";
+export * from "./get-pokemon-url-list";
+export * from "./get-pokemon";
