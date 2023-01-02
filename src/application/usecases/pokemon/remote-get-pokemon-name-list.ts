@@ -1,7 +1,7 @@
 import {
-  GetPokemonUrlList,
-  GetPokemonUrlListRequest,
-  GetPokemonUrlListResponse,
+  GetPokemonNameList,
+  GetPokemonNameListRequest,
+  GetPokemonNameListResponse,
 } from "@domain/usecases/pokemon";
 import { UnexpectedError } from "@domain/errors";
 
@@ -10,13 +10,13 @@ import { HttpStatusCode } from "@application/protocols/http";
 
 import { left } from "@shared/helpers";
 
-export class RemoteGetPokemonUrlList implements GetPokemonUrlList {
+export class RemoteGetPokemonNameList implements GetPokemonNameList {
   constructor(private readonly pokemonRepository: PokemonRepository) {}
 
   async execute(
-    request: GetPokemonUrlListRequest
-  ): Promise<GetPokemonUrlListResponse> {
-    const response = await this.pokemonRepository.getPokemonUrlList(request);
+    request: GetPokemonNameListRequest
+  ): Promise<GetPokemonNameListResponse> {
+    const response = await this.pokemonRepository.getPokemonNameList(request);
 
     switch (response.statusCode) {
       case HttpStatusCode.ok:

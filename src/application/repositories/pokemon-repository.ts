@@ -2,14 +2,14 @@ import { HttpResponse } from "@application/protocols/http";
 import {
   GetPokemonRequest,
   GetPokemonResponse,
-  GetPokemonUrlListRequest,
-  GetPokemonUrlListResponse,
+  GetPokemonNameListRequest,
+  GetPokemonNameListResponse,
 } from "@domain/usecases/pokemon";
 
 export interface PokemonRepository {
-  getPokemonUrlList(
-    request: GetPokemonUrlListRequest
-  ): Promise<HttpResponse<GetPokemonUrlListResponse>>;
+  getPokemonNameList(
+    request: GetPokemonNameListRequest
+  ): Promise<HttpResponse<GetPokemonNameListResponse>>;
 
   getPokemon(
     request: GetPokemonRequest
