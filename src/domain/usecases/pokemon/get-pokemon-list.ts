@@ -2,14 +2,12 @@ import { Pokemon } from "@domain/entities";
 import { UnexpectedError } from "@domain/errors";
 import { Either } from "@shared/helpers";
 
-export interface LoadPokemonListRequest {
+export interface GetPokemonListRequest {
   limit: number;
 }
 
-export type LoadPokemonListResponse = Either<UnexpectedError, Pokemon[]>;
+export type GetPokemonListResponse = Either<UnexpectedError, Pokemon[]>;
 
-export interface LoadPokemonList {
-  execute: (
-    request: LoadPokemonListRequest
-  ) => Promise<LoadPokemonListResponse>;
+export interface GetPokemonList {
+  execute: (request: GetPokemonListRequest) => Promise<GetPokemonListResponse>;
 }
