@@ -1,6 +1,6 @@
 export interface AbilityProps {
   name: string;
-  isHidden: number;
+  isHidden: boolean;
 }
 
 export class Ability {
