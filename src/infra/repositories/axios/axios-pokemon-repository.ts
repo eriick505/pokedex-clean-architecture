@@ -1,8 +1,8 @@
 import type {
   GetPokemonNameListRequest,
   GetPokemonNameListResponse,
-  GetPokemonRequest,
-  GetPokemonResponse,
+  GetPokemonByIdRequest,
+  GetPokemonByIdResponse,
 } from "@domain/usecases/pokemon";
 
 import { PokemonRepository } from "@application/repositories";
@@ -44,7 +44,9 @@ export class AxiosPokemonRepository implements PokemonRepository {
     }
   }
 
-  async getPokemon(request: GetPokemonRequest): Promise<GetPokemonResponse> {
+  async getPokemonById(
+    request: GetPokemonByIdRequest
+  ): Promise<GetPokemonByIdResponse> {
     const axiosClient = new AxiosHttpClient<RawPokemon>();
     const url = this.pokemonRoutes.getPokemon({ id: request.id });
 
