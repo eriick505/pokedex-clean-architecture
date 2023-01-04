@@ -4,7 +4,7 @@ import {
   Sprites,
   Stat,
   Type,
-  Evolution,
+  // Evolution,
 } from "@domain/entities/pokemon/value-objects";
 
 import type {
@@ -13,7 +13,7 @@ import type {
   SpritesProps,
   StatProps,
   TypeProps,
-  EvolutionProps,
+  // EvolutionProps,
 } from "@domain/entities/pokemon/value-objects";
 
 import { UniqueEntityID, Entity } from "@shared/domain";
@@ -28,7 +28,7 @@ interface PokemonProps {
   weight: number;
   abilities: Ability[];
   sprites: Sprites;
-  evolutions: Evolution[];
+  // evolutions: Evolution[];
 }
 
 interface PokemonData {
@@ -40,7 +40,7 @@ interface PokemonData {
   weight: number;
   abilities: AbilityProps[];
   sprites: SpritesProps;
-  evolutions: EvolutionProps[];
+  // evolutions: EvolutionProps[];
 }
 
 export class Pokemon extends Entity<PokemonProps> {
@@ -50,7 +50,7 @@ export class Pokemon extends Entity<PokemonProps> {
 
   public static create(
     props: PokemonData,
-    id?: string
+    id?: string | number
   ): Either<unknown, Pokemon> {
     const pokemonId = id ? new UniqueEntityID(id) : undefined;
 
@@ -58,7 +58,7 @@ export class Pokemon extends Entity<PokemonProps> {
     const moves = props.moves.map((move) => Move.create({ name: move.name }));
     const stats = props.stats.map((stat) => Stat.create(stat));
     const abilities = props.abilities.map((ability) => Ability.create(ability));
-    const evolutions = props.evolutions.map((evo) => Evolution.create(evo));
+    // const evolutions = props.evolutions.map((evo) => Evolution.create(evo));
 
     const sprites = Sprites.create({
       frontDefault: props.sprites.frontDefault,
@@ -77,7 +77,7 @@ export class Pokemon extends Entity<PokemonProps> {
           weight: props.weight,
           abilities,
           sprites,
-          evolutions,
+          // evolutions,
         },
         pokemonId
       )
@@ -116,7 +116,7 @@ export class Pokemon extends Entity<PokemonProps> {
     return this.props.sprites;
   }
 
-  public get evolutions() {
-    return this.props.evolutions;
-  }
+  // public get evolutions() {
+  //   return this.props.evolutions;
+  // }
 }
