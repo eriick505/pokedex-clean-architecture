@@ -12,11 +12,7 @@ import { AxiosHttpClient } from "@infra/http";
 import { RemotePokemonRoutes } from "@infra/http/routes";
 
 export class AxiosPokemonRepository implements PokemonRepository {
-  private pokemonRoutes: RemotePokemonRoutes;
-
-  constructor() {
-    this.pokemonRoutes = new RemotePokemonRoutes();
-  }
+  constructor(private readonly pokemonRoutes: RemotePokemonRoutes) {}
 
   async getPokemonNameList(
     request: GetPokemonNameListRequest
