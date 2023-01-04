@@ -9,9 +9,7 @@ import {
 export interface PokemonRepository {
   getPokemonNameList(
     request: GetPokemonNameListRequest
-  ): Promise<HttpResponse<GetPokemonNameListResponse>>;
+  ): Promise<GetPokemonNameListResponse>;
 
-  getPokemon(
-    request: GetPokemonRequest
-  ): Promise<HttpResponse<GetPokemonResponse>>;
+  getPokemon(request: GetPokemonRequest): Promise<GetPokemonResponse>;
 }
