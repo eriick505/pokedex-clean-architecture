@@ -5,40 +5,61 @@ import type {
   GetPokemonResponse,
 } from "@domain/usecases/pokemon";
 
-import { HttpResponse } from "@application/protocols/http";
 import { PokemonRepository } from "@application/repositories";
+import { HttpStatusCode } from "@application/protocols/http";
+
+import { UnexpectedError } from "@domain/errors";
+import { PokemonNotFound } from "@domain/usecases/pokemon/errors";
 
 import { AxiosHttpClient } from "@infra/http";
 import { RemotePokemonRoutes } from "@infra/http/routes";
+
+import {
+  RawPokemon,
+  RawPokemonNameList,
+} from "@infra/repositories/axios/model";
+import { AxiosPokemonMapper } from "@infra/repositories/axios/mappers";
+
+import { left, right } from "@shared/helpers";
 
 export class AxiosPokemonRepository implements PokemonRepository {
   constructor(private readonly pokemonRoutes: RemotePokemonRoutes) {}
 
   async getPokemonNameList(
     request: GetPokemonNameListRequest
-  ): Promise<HttpResponse<GetPokemonNameListResponse>> {
-    const axiosClient = new AxiosHttpClient<GetPokemonNameListResponse>();
+  ): Promise<GetPokemonNameListResponse> {
+    const axiosClient = new AxiosHttpClient<RawPokemonNameList>();
     const url = this.pokemonRoutes.getPokemonNameList({ limit: request.limit });
 
-    const response = await axiosClient.request({
+    const { data, statusCode } = await axiosClient.request({
       method: "get",
       url,
     });
 
-    return response;
+    switch (statusCode) {
+      case HttpStatusCode.ok:
+        return right(data.results.map((p) => p.name));
+      default:
+        return left(new UnexpectedError());
+    }
   }
 
-  async getPokemon(
-    request: GetPokemonRequest
-  ): Promise<HttpResponse<GetPokemonResponse>> {
-    const axiosClient = new AxiosHttpClient<GetPokemonResponse>();
+  async getPokemon(request: GetPokemonRequest): Promise<GetPokemonResponse> {
+    const axiosClient = new AxiosHttpClient<RawPokemon>();
     const url = this.pokemonRoutes.getPokemon({ id: request.id });
 
-    const response = await axiosClient.request({
+    const { data, statusCode } = await axiosClient.request({
       method: "get",
       url,
     });
 
-    return response;
+    switch (statusCode) {
+      case HttpStatusCode.ok:
+        return right(AxiosPokemonMapper.toDomain(data));
+      case HttpStatusCode.notFound:
+        return left(new PokemonNotFound());
+      default:
+        return left(new UnexpectedError());
+    }
   }
 }
