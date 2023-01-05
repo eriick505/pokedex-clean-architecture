@@ -5,7 +5,7 @@ import {
 } from "@domain/usecases/pokemon";
 import { Pokemon } from "@domain/entities";
 
-import { PokemonRepository } from "@application/repositories";
+import { PokemonRepository } from "@domain/repositories";
 import {
   RemoteGetPokemon,
   RemoteGetPokemonNameList,

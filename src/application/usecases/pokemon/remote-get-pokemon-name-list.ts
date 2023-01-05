@@ -4,7 +4,7 @@ import type {
   GetPokemonNameListResponse,
 } from "@domain/usecases/pokemon";
 
-import { PokemonRepository } from "@application/repositories";
+import { PokemonRepository } from "@domain/repositories";
 
 export class RemoteGetPokemonNameList implements GetPokemonNameList {
   constructor(private readonly pokemonRepository: PokemonRepository) {}
