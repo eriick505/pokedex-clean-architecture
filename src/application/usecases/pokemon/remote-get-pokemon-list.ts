@@ -7,7 +7,7 @@ import { Pokemon } from "@domain/entities";
 
 import { PokemonRepository } from "@domain/repositories";
 import {
-  RemoteGetPokemon,
+  RemoteGetPokemonById,
   RemoteGetPokemonNameList,
 } from "@application/usecases/pokemon";
 
@@ -33,7 +33,7 @@ export class RemoteGetPokemonList implements GetPokemonList {
 
     const pokemonNameList = pokemonNameListOrError.value;
 
-    const getPokemon = new RemoteGetPokemon(this.pokemonRepository);
+    const getPokemon = new RemoteGetPokemonById(this.pokemonRepository);
 
     const handleGetPokemon = async (id: string) => {
       const pokemonOrError = await getPokemon.execute({ id });
