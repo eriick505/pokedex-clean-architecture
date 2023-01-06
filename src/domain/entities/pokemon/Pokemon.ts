@@ -4,7 +4,6 @@ import {
   Sprites,
   Stat,
   Type,
-  // Evolution,
 } from "@domain/entities/pokemon/value-objects";
 
 import type {
@@ -13,7 +12,6 @@ import type {
   SpritesProps,
   StatProps,
   TypeProps,
-  // EvolutionProps,
 } from "@domain/entities/pokemon/value-objects";
 
 import { UniqueEntityID, Entity } from "@shared/domain";
@@ -28,7 +26,6 @@ interface PokemonProps {
   weight: number;
   abilities: Ability[];
   sprites: Sprites;
-  // evolutions: Evolution[];
 }
 
 interface PokemonData {
@@ -40,7 +37,6 @@ interface PokemonData {
   weight: number;
   abilities: AbilityProps[];
   sprites: SpritesProps;
-  // evolutions: EvolutionProps[];
 }
 
 export class Pokemon extends Entity<PokemonProps> {
@@ -115,8 +111,4 @@ export class Pokemon extends Entity<PokemonProps> {
   public get sprites() {
     return this.props.sprites;
   }
-
-  // public get evolutions() {
-  //   return this.props.evolutions;
-  // }
 }
