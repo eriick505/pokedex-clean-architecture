@@ -30,9 +30,21 @@ export class AxiosSpecieRepository implements SpecieRepository {
       url,
     });
 
+    const geEvolutionChainIdFromURL = (url: string) => {
+      return url.match(/\/\d+/g)?.[0].replace("/", "") ?? "0";
+    };
+
+    const getSpecieDataToDomain = () => ({
+      ...data,
+      evolution_chain: {
+        url: data.evolution_chain.url,
+        id: geEvolutionChainIdFromURL(data.evolution_chain.url),
+      },
+    });
+
     switch (statusCode) {
       case HttpStatusCode.ok:
-        return right(AxiosSpecieMapper.toDomain(data));
+        return right(AxiosSpecieMapper.toDomain(getSpecieDataToDomain()));
       case HttpStatusCode.notFound:
         return left(new PokemonNotFound());
       default:
