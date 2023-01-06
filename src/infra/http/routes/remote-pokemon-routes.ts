@@ -1,15 +1,21 @@
 import {
   GetPokemonNameListRequest,
-  GetPokemonRequest,
+  GetPokemonByIdRequest,
   PokemonRoutes,
+  GetSpecieByIdRequest,
 } from "@application/routes";
+import { makeApiUrl } from "@infra/factories/http";
 
 export class RemotePokemonRoutes implements PokemonRoutes {
   getPokemonNameList(request: GetPokemonNameListRequest): string {
-    return `/pokemon?limit=${request.limit}&offset=0`;
+    return makeApiUrl(`/pokemon?limit=${request.limit}&offset=0`);
   }
 
-  getPokemon(request: GetPokemonRequest): string {
-    return `pokemon/${request.id}`;
+  getPokemonById(request: GetPokemonByIdRequest): string {
+    return makeApiUrl(`pokemon/${request.id}`);
+  }
+
+  getSpecieById(request: GetSpecieByIdRequest): string {
+    return makeApiUrl(`pokemon-species/${request.id}`);
   }
 }

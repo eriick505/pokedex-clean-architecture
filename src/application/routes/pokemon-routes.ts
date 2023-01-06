@@ -2,11 +2,16 @@ export interface GetPokemonNameListRequest {
   limit: number;
 }
 
-export interface GetPokemonRequest {
+export interface GetPokemonByIdRequest {
+  id: string | number;
+}
+
+export interface GetSpecieByIdRequest {
   id: string | number;
 }
 
 export interface PokemonRoutes {
   getPokemonNameList(request: GetPokemonNameListRequest): string;
-  getPokemon(request: GetPokemonRequest): string;
+  getPokemonById(request: GetPokemonByIdRequest): string;
+  getSpecieById(request: GetSpecieByIdRequest): string;
 }
