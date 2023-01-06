@@ -1,3 +1,4 @@
+import { Entity, UniqueEntityID } from "@shared/domain";
 export interface SpecieProps {
   evolutionChain: {
     url: string;
@@ -5,11 +6,9 @@ export interface SpecieProps {
   color: string;
 }
 
-export class Specie {
-  private props: SpecieProps;
-
-  constructor(props: SpecieProps) {
-    this.props = props;
+export class Specie extends Entity<SpecieProps> {
+  constructor(props: SpecieProps, id?: UniqueEntityID) {
+    super(props, id);
   }
 
   public static create(props: SpecieProps) {
