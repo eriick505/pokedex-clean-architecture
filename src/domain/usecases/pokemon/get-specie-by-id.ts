@@ -1,4 +1,4 @@
-import { Spiecie } from "@domain/entities";
+import { Specie } from "@domain/entities";
 import { UnexpectedError } from "@domain/errors";
 import { SpecieNotFound } from "@domain/usecases/pokemon/errors";
 
@@ -10,7 +10,7 @@ export interface GetSpecieByIdRequest {
 
 export type GetSpecieByIdResponse = Either<
   UnexpectedError | SpecieNotFound,
-  Spiecie
+  Specie
 >;
 
 export interface GetSpecieById {
