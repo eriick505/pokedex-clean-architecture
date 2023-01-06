@@ -5,8 +5,6 @@ import type {
   GetPokemonByIdResponse,
   GetEvolutionByIdRequest,
   GetEvolutionByIdResponse,
-  GetSpecieByIdRequest,
-  GetSpecieByIdResponse,
 } from "@domain/usecases/pokemon";
 
 import { PokemonRepository } from "@domain/repositories";
@@ -21,13 +19,8 @@ import { RemotePokemonRoutes } from "@infra/http/routes";
 import {
   RawPokemon,
   RawPokemonNameList,
-  RawSpecie,
 } from "@infra/repositories/axios/model";
-
-import {
-  AxiosPokemonMapper,
-  AxiosSpecieMapper,
-} from "@infra/repositories/axios/mappers";
+import { AxiosPokemonMapper } from "@infra/repositories/axios/mappers";
 
 import { left, right } from "@shared/helpers";
 
@@ -78,26 +71,5 @@ export class AxiosPokemonRepository implements PokemonRepository {
     request: GetEvolutionByIdRequest
   ): Promise<GetEvolutionByIdResponse> {
     throw new Error("Method not implemented.");
-  }
-
-  async getSpecieById(
-    request: GetSpecieByIdRequest
-  ): Promise<GetSpecieByIdResponse> {
-    const axiosClient = new AxiosHttpClient<RawSpecie>();
-    const url = this.pokemonRoutes.getSpecieById({ id: request.id });
-
-    const { data, statusCode } = await axiosClient.request({
-      method: "get",
-      url,
-    });
-
-    switch (statusCode) {
-      case HttpStatusCode.ok:
-        return right(AxiosSpecieMapper.toDomain(data));
-      case HttpStatusCode.notFound:
-        return left(new PokemonNotFound());
-      default:
-        return left(new UnexpectedError());
-    }
   }
 }

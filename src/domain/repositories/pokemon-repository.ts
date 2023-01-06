@@ -5,8 +5,6 @@ import {
   GetPokemonByIdResponse,
   GetPokemonNameListRequest,
   GetPokemonNameListResponse,
-  GetSpecieByIdRequest,
-  GetSpecieByIdResponse,
 } from "@domain/usecases/pokemon";
 
 export interface PokemonRepository {
@@ -21,6 +19,4 @@ export interface PokemonRepository {
   getEvolutionById(
     request: GetEvolutionByIdRequest
   ): Promise<GetEvolutionByIdResponse>;
-
-  getSpecieById(request: GetSpecieByIdRequest): Promise<GetSpecieByIdResponse>;
 }
