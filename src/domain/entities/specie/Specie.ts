@@ -1,7 +1,9 @@
 import { Entity, UniqueEntityID } from "@shared/domain";
+
 export interface SpecieProps {
   evolutionChain: {
     url: string;
+    id: string | number;
   };
   color: string;
 }
@@ -17,5 +19,13 @@ export class Specie extends Entity<SpecieProps> {
 
   public get evolutionChainUrl() {
     return this.props.evolutionChain.url;
+  }
+
+  public get evolutionChainID() {
+    return this.props.evolutionChain.url;
+  }
+
+  public get color() {
+    return this.props.color;
   }
 }
