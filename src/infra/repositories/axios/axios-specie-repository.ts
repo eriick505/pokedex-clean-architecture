@@ -30,7 +30,7 @@ export class AxiosSpecieRepository implements SpecieRepository {
       url,
     });
 
-    const geEvolutionChainIdFromURL = (url: string) => {
+    const getEvolutionChainIdFromURL = (url: string) => {
       return url.match(/\/\d+/g)?.[0].replace("/", "") ?? "0";
     };
 
@@ -38,7 +38,7 @@ export class AxiosSpecieRepository implements SpecieRepository {
       ...data,
       evolution_chain: {
         url: data.evolution_chain.url,
-        id: geEvolutionChainIdFromURL(data.evolution_chain.url),
+        id: getEvolutionChainIdFromURL(data.evolution_chain.url),
       },
     });
 
