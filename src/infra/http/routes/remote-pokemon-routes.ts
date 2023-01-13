@@ -3,6 +3,7 @@ import {
   GetPokemonByIdRequest,
   PokemonRoutes,
   GetSpecieByIdRequest,
+  GetEvolutionByIdRequest,
 } from "@application/routes";
 import { makeApiUrl } from "@infra/factories/http";
 
@@ -17,5 +18,9 @@ export class RemotePokemonRoutes implements PokemonRoutes {
 
   getSpecieById(request: GetSpecieByIdRequest): string {
     return makeApiUrl(`pokemon-species/${request.id}`);
+  }
+
+  getEvolutionById(request: GetEvolutionByIdRequest): string {
+    return makeApiUrl(`evolution-chain/${request.id}`);
   }
 }
