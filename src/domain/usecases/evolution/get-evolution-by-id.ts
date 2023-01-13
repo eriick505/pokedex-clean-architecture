@@ -13,7 +13,7 @@ export interface GetEvolutionByIdRequest {
 
 export type GetEvolutionByIdResponse = Either<
   UnexpectedError | EvolutionNotFound,
-  HasNoEvolution | Evolution
+  HasNoEvolution | Evolution[]
 >;
 
 export interface GetEvolutionById {
