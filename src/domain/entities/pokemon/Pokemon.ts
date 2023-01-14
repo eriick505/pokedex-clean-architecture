@@ -5,6 +5,7 @@ import {
   Stat,
   Type,
 } from "@domain/entities/pokemon/value-objects";
+import { Evolution, EvolutionProps } from "@domain/entities";
 
 import type {
   AbilityProps,
@@ -26,6 +27,7 @@ interface PokemonProps {
   weight: number;
   abilities: Ability[];
   sprites: Sprites;
+  evolutions?: Evolution[];
 }
 
 interface PokemonData {
@@ -37,6 +39,7 @@ interface PokemonData {
   weight: number;
   abilities: AbilityProps[];
   sprites: SpritesProps;
+  evolutions?: EvolutionProps[];
 }
 
 export class Pokemon extends Entity<PokemonProps> {
@@ -54,7 +57,7 @@ export class Pokemon extends Entity<PokemonProps> {
     const moves = props.moves.map((move) => Move.create({ name: move.name }));
     const stats = props.stats.map((stat) => Stat.create(stat));
     const abilities = props.abilities.map((ability) => Ability.create(ability));
-    // const evolutions = props.evolutions.map((evo) => Evolution.create(evo));
+    const evolutions = props.evolutions?.map((evo) => Evolution.create(evo));
 
     const sprites = Sprites.create({
       frontDefault: props.sprites.frontDefault,
@@ -73,7 +76,7 @@ export class Pokemon extends Entity<PokemonProps> {
           weight: props.weight,
           abilities,
           sprites,
-          // evolutions,
+          evolutions,
         },
         pokemonId
       )
@@ -110,5 +113,9 @@ export class Pokemon extends Entity<PokemonProps> {
 
   public get sprites() {
     return this.props.sprites;
+  }
+
+  public get evoutions() {
+    return this.props.evolutions;
   }
 }
