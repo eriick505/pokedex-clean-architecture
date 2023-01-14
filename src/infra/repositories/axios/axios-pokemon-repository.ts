@@ -3,8 +3,6 @@ import type {
   GetPokemonNameListResponse,
   GetPokemonByIdRequest,
   GetPokemonByIdResponse,
-  GetEvolutionByIdRequest,
-  GetEvolutionByIdResponse,
 } from "@domain/usecases/pokemon";
 
 import { PokemonRepository } from "@domain/repositories";
@@ -46,6 +44,7 @@ export class AxiosPokemonRepository implements PokemonRepository {
     }
   }
 
+  // buscar evolution pelo id ao buscar o pokemon pelo id
   async getPokemonById(
     request: GetPokemonByIdRequest
   ): Promise<GetPokemonByIdResponse> {
@@ -65,11 +64,5 @@ export class AxiosPokemonRepository implements PokemonRepository {
       default:
         return left(new UnexpectedError());
     }
-  }
-
-  getEvolutionById(
-    request: GetEvolutionByIdRequest
-  ): Promise<GetEvolutionByIdResponse> {
-    throw new Error("Method not implemented.");
   }
 }

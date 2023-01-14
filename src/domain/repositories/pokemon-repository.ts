@@ -1,6 +1,4 @@
 import {
-  GetEvolutionByIdRequest,
-  GetEvolutionByIdResponse,
   GetPokemonByIdRequest,
   GetPokemonByIdResponse,
   GetPokemonNameListRequest,
@@ -15,8 +13,4 @@ export interface PokemonRepository {
   getPokemonById(
     request: GetPokemonByIdRequest
   ): Promise<GetPokemonByIdResponse>;
-
-  getEvolutionById(
-    request: GetEvolutionByIdRequest
-  ): Promise<GetEvolutionByIdResponse>;
 }
