@@ -27,7 +27,7 @@ interface PokemonProps {
   weight: number;
   abilities: Ability[];
   sprites: Sprites;
-  evolutions?: Evolution[];
+  evolutions: Evolution[];
 }
 
 interface PokemonData {
@@ -39,7 +39,7 @@ interface PokemonData {
   weight: number;
   abilities: AbilityProps[];
   sprites: SpritesProps;
-  evolutions?: EvolutionProps[];
+  evolutions: EvolutionProps[];
 }
 
 export class Pokemon extends Entity<PokemonProps> {
