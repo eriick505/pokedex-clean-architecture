@@ -19,7 +19,7 @@ import { Evolution } from "@domain/entities";
 export class AxiosEvolutionRepository implements EvolutionRepository {
   constructor(private readonly pokemonRoutes: RemotePokemonRoutes) {}
 
-  getAllEvolutions(chain: EvolvesTo) {
+  private getAllEvolutions(chain: EvolvesTo) {
     let storageArray: Evolution[] = [];
 
     const getNecessaryDataFromEvoChains = ({
