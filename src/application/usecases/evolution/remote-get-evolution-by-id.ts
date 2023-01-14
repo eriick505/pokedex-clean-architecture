@@ -4,14 +4,14 @@ import {
   GetEvolutionByIdResponse,
 } from "@domain/usecases/evolution";
 
-import { EvolutionRepository } from "@domain/repositories";
+import { PokemonRepository } from "@domain/repositories";
 
 export class RemoteGetEvolutionById implements GetEvolutionById {
-  constructor(private readonly evolutionRepository: EvolutionRepository) {}
+  constructor(private readonly pokemonRepository: PokemonRepository) {}
 
   async execute(
     request: GetEvolutionByIdRequest
   ): Promise<GetEvolutionByIdResponse> {
-    return await this.evolutionRepository.getEvolutionById(request);
+    return await this.pokemonRepository.getEvolutionById(request);
   }
 }
