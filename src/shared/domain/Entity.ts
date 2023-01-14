@@ -9,7 +9,7 @@ export abstract class Entity<T> {
     this._id = id ? id : new UniqueEntityID();
   }
 
-  id() {
-    this._id.value;
+  get id() {
+    return this._id.value;
   }
 }

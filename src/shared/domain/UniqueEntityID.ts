@@ -7,7 +7,7 @@ export class UniqueEntityID {
     this._id = id ? id : uuidv4();
   }
 
-  value() {
+  get value() {
     return this._id;
   }
 }
