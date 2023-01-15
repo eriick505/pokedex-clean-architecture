@@ -1,40 +1,52 @@
-import { Pokemon } from "@domain/entities";
-import { RawPokemon } from "@infra/repositories/axios/model";
+import { Pokemon, Evolution } from "@domain/entities";
+import { RawEvolution, RawPokemon } from "@infra/repositories/axios/model";
 
 export class AxiosPokemonMapper {
-  static toDomain(raw: RawPokemon): Pokemon {
-    const types = raw.types.map((t) => t.type);
-    const moves = raw.moves.map((m) => m.move);
+  static toDomain(pokemonRaw: RawPokemon, evolutions: Evolution[]): Pokemon {
+    const {
+      types,
+      moves,
+      stats,
+      abilities,
+      sprites,
+      name,
+      height,
+      weight,
+      id,
+    } = pokemonRaw;
 
-    const stats = raw.stats.map((s) => ({
+    const pokemonTypes = types.map((t) => t.type);
+    const pokemonMoves = moves.map((m) => m.move);
+
+    const pokemonStats = stats.map((s) => ({
       name: s.stat.name,
       baseStat: s.base_stat,
     }));
 
-    const abilities = raw.abilities.map((a) => ({
+    const pokemonAbilities = abilities.map((a) => ({
       name: a.ability.name,
       isHidden: a.is_hidden,
     }));
 
-    const sprites = {
-      frontDefault: raw.sprites.front_default,
-      artWorkFront: raw.sprites.other["official-artwork"].front_default,
-      dreamWorldFront: raw.sprites.other.dream_world.front_default,
+    const pokemonSprites = {
+      frontDefault: sprites.front_default,
+      artWorkFront: sprites.other["official-artwork"].front_default,
+      dreamWorldFront: sprites.other.dream_world.front_default,
     };
 
     const pokemonOrError = Pokemon.create(
       {
-        name: raw.name,
-        types,
-        moves,
-        stats,
-        height: raw.height,
-        weight: raw.weight,
-        abilities,
-        sprites,
-        // evolutions: EvolutionProps[],
+        name: name,
+        types: pokemonTypes,
+        moves: pokemonMoves,
+        stats: pokemonStats,
+        height: height,
+        weight: weight,
+        abilities: pokemonAbilities,
+        sprites: pokemonSprites,
+        evolutions: evolutions,
       },
-      raw.id
+      id
     );
 
     return pokemonOrError.isRight() ? pokemonOrError.value : null;
