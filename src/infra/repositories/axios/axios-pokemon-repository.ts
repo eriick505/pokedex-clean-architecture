@@ -1,25 +1,20 @@
-import { Evolution } from "@domain/entities";
-
-import type {
-  GetPokemonNameListRequest,
-  GetPokemonNameListResponse,
-  GetPokemonByIdRequest,
-  GetPokemonByIdResponse,
-} from "@domain/usecases/pokemon";
-
-import {
-  GetSpecieByIdRequest,
-  GetSpecieByIdResponse,
-} from "@domain/usecases/specie";
-
-import {
-  GetEvolutionByIdRequest,
-  GetEvolutionByIdResponse,
-} from "@domain/usecases/evolution";
-
 import { PokemonRepository } from "@domain/repositories";
 import { UnexpectedError } from "@domain/errors";
-import { PokemonNotFound } from "@domain/usecases/pokemon/errors";
+import {
+  FailToGetAllPokemonData,
+  PokemonNotFound,
+} from "@domain/usecases/pokemon/errors";
+
+import type {
+  RepoGetEvolutionByIdRequest,
+  RepoGetEvolutionByIdResponse,
+  RepoGetPokemonByIdRequest,
+  RepoGetPokemonByIdResponse,
+  RepoGetPokemonNameListRequest,
+  RepoGetPokemonNameListResponse,
+  RepoGetSpecieByIdRequest,
+  RepoGetSpecieByIdResponse,
+} from "@domain/repositories";
 
 import { HttpStatusCode } from "@application/protocols/http";
 
@@ -29,23 +24,26 @@ import { RemotePokemonRoutes } from "@infra/http/routes";
 import {
   RawPokemon,
   RawPokemonNameList,
+  RawSpecie,
+  RawEvolution,
+  EvolvesTo,
 } from "@infra/repositories/axios/model";
-import { AxiosPokemonMapper } from "@infra/repositories/axios/mappers";
 
-import { RawSpecie } from "@infra/repositories/axios/model";
-import { AxiosSpecieMapper } from "@infra/repositories/axios/mappers";
-
-import { RawEvolution, EvolvesTo } from "@infra/repositories/axios/model";
-import { AxiosEvolutionMapper } from "@infra/repositories/axios/mappers";
+import {
+  AxiosPokemonMapper,
+  AxiosSpecieMapper,
+  AxiosEvolutionMapper,
+} from "@infra/repositories/axios/mappers";
 
 import { left, right } from "@shared/helpers";
+import { HasNoEvolution } from "@domain/usecases/evolution/errors";
 
 export class AxiosPokemonRepository implements PokemonRepository {
   constructor(private readonly pokemonRoutes: RemotePokemonRoutes) {}
 
   async getPokemonNameList(
-    request: GetPokemonNameListRequest
-  ): Promise<GetPokemonNameListResponse> {
+    request: RepoGetPokemonNameListRequest
+  ): Promise<RepoGetPokemonNameListResponse> {
     const axiosClient = new AxiosHttpClient<RawPokemonNameList>();
     const url = this.pokemonRoutes.getPokemonNameList({ limit: request.limit });
 
@@ -62,31 +60,51 @@ export class AxiosPokemonRepository implements PokemonRepository {
     }
   }
 
-  // buscar evolution pelo id ao buscar o pokemon pelo id
   async getPokemonById(
-    request: GetPokemonByIdRequest
-  ): Promise<GetPokemonByIdResponse> {
+    request: RepoGetPokemonByIdRequest
+  ): Promise<RepoGetPokemonByIdResponse> {
     const axiosClient = new AxiosHttpClient<RawPokemon>();
     const url = this.pokemonRoutes.getPokemonById({ id: request.id });
 
-    const { data, statusCode } = await axiosClient.request({
+    const { data: pokemonData, statusCode } = await axiosClient.request({
       method: "get",
       url,
     });
 
-    switch (statusCode) {
-      case HttpStatusCode.ok:
-        return right(AxiosPokemonMapper.toDomain(data));
-      case HttpStatusCode.notFound:
-        return left(new PokemonNotFound());
-      default:
-        return left(new UnexpectedError());
+    if (statusCode === HttpStatusCode.notFound) {
+      return left(new PokemonNotFound());
     }
+
+    if (statusCode !== HttpStatusCode.ok) {
+      return left(new UnexpectedError());
+    }
+
+    const specieOrError = await this.getSpecieById({ id: pokemonData.id });
+
+    if (specieOrError.isLeft()) {
+      return left(new FailToGetAllPokemonData());
+    }
+
+    const { evolutionChainID } = specieOrError.value;
+
+    const evolutionsOrError = await this.getEvolutionById({
+      id: evolutionChainID,
+    });
+
+    if (evolutionsOrError.isLeft()) {
+      return left(new FailToGetAllPokemonData());
+    }
+
+    const evolutions = Array.isArray(evolutionsOrError.value)
+      ? evolutionsOrError.value
+      : [];
+
+    return right(AxiosPokemonMapper.toDomain(pokemonData, evolutions));
   }
 
   async getSpecieById(
-    request: GetSpecieByIdRequest
-  ): Promise<GetSpecieByIdResponse> {
+    request: RepoGetSpecieByIdRequest
+  ): Promise<RepoGetSpecieByIdResponse> {
     const axiosClient = new AxiosHttpClient<RawSpecie>();
     const url = this.pokemonRoutes.getSpecieById({ id: request.id });
 
@@ -118,13 +136,13 @@ export class AxiosPokemonRepository implements PokemonRepository {
   }
 
   private getAllEvolutions(chain: EvolvesTo) {
-    let storageArray: Evolution[] = [];
+    let storageArray: Omit<EvolvesTo, "evolves_to">[] = [];
 
     const getNecessaryDataFromEvoChains = ({
       species,
       evolution_details,
-    }: EvolvesTo): Evolution => {
-      return AxiosEvolutionMapper.toDomain({ evolution_details, species });
+    }: EvolvesTo) => {
+      return { evolution_details, species };
     };
 
     storageArray.push(getNecessaryDataFromEvoChains(chain));
@@ -140,8 +158,8 @@ export class AxiosPokemonRepository implements PokemonRepository {
   }
 
   async getEvolutionById(
-    request: GetEvolutionByIdRequest
-  ): Promise<GetEvolutionByIdResponse> {
+    request: RepoGetEvolutionByIdRequest
+  ): Promise<RepoGetEvolutionByIdResponse> {
     const axiosClient = new AxiosHttpClient<RawEvolution>();
     const url = this.pokemonRoutes.getEvolutionById({ id: request.id });
 
@@ -150,11 +168,19 @@ export class AxiosPokemonRepository implements PokemonRepository {
       url,
     });
 
-    const evolutions = this.getAllEvolutions(data.chain);
+    const allEvolutions = this.getAllEvolutions(data.chain);
+    const evolutions = allEvolutions.map((evolution) =>
+      AxiosEvolutionMapper.toDomain(evolution)
+    );
+
+    const handleOkData = () => {
+      if (evolutions.length <= 1) return new HasNoEvolution(request.id);
+      return evolutions;
+    };
 
     switch (statusCode) {
       case HttpStatusCode.ok:
-        return right(evolutions);
+        return right(handleOkData());
       case HttpStatusCode.notFound:
         return left(new PokemonNotFound());
       default:
