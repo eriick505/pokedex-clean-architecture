@@ -22,7 +22,7 @@ export class Specie extends Entity<SpecieProps> {
   }
 
   public get evolutionChainID() {
-    return this.props.evolutionChain.url;
+    return this.props.evolutionChain.id;
   }
 
   public get color() {
