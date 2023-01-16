@@ -21,6 +21,7 @@
       "@adapters/*": ["./src/adapters/*"],
       "@shared/*": ["./src/shared/*"],
       "@infra/*": ["./src/infra/*"],
+      "@presentation/*": ["./src/infra/presentation/*"],
       "@test/*": ["./test/*"]
     }
   },
