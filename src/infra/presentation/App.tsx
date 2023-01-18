@@ -1,32 +1,19 @@
-import { useEffect, useState } from "react";
-import { makeGetPokemonById } from "@infra/factories/usecases/pokemon";
-import { Pokemon } from "@domain/entities";
-import { PokeCard } from "@presentation/modules/pokedex/components";
+import {
+  PokeDetails,
+  Pokedex,
+  SearchPokemon,
+} from "@presentation/modules/pokedex/components";
 
 export function App() {
-  const [pokemon, setPokemon] = useState<Pokemon>(undefined);
-
-  const ble = async () => {
-    const x = await makeGetPokemonById().execute({ id: "eevee" });
-
-    if (x.isLeft()) {
-      return console.log(x.value, "left");
-    }
-
-    setPokemon(x.value);
-  };
-
-  useEffect(() => {
-    ble();
-  }, []);
-
-  if (!pokemon) return;
   return (
-    <div className="App">
-      <PokeCard pokemon={pokemon} />
-      {pokemon?.evoutions.map((evo) => (
-        <li key={evo.name}>{evo.name}</li>
-      ))}
+    <div className="mt-8 grid grid-cols-[1fr_340px] gap-4">
+      <main>
+        <SearchPokemon />
+        <Pokedex />
+      </main>
+      <aside className="bg-white bg-[#202020]">
+        <PokeDetails />
+      </aside>
     </div>
   );
 }
