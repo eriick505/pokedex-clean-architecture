@@ -18,7 +18,9 @@ export const PokeCard = tw.article`
   transition-all
   cursor-pointer
   
-  bg-white
+  // bg-white
+
+  bg-[#202020]
 
   hover:scale-90
 `;
@@ -53,5 +55,7 @@ export const PokeName = tw.h2`
   font-extrabold 
   text-lg
 
-  text-[#03133c] 
+  // text-[#03133c] 
+
+  text-[#f1f1f1]
 `;
