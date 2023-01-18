@@ -1,14 +1,19 @@
+import { SyntheticEvent } from "react";
 import { Pokemon } from "@domain/entities";
 import tw from "twin.macro";
 
 export const usePokeCard = ({ id, name, evoutions }: Pokemon) => {
-  const handleImageonLoadingComplete = (img: HTMLImageElement) => {
-    if (img.clientHeight > 77) {
-      img.style.height = "80px";
+  const handleImageonLoadingComplete = (
+    img: SyntheticEvent<HTMLImageElement, Event>
+  ) => {
+    const imgElement = img.target as HTMLImageElement;
+
+    if (imgElement.clientHeight > 77) {
+      imgElement.style.height = "80px";
     }
 
-    if (img.clientWidth > 100) {
-      img.style.height = "70px";
+    if (imgElement.clientWidth > 100) {
+      imgElement.style.height = "70px";
     }
   };
 

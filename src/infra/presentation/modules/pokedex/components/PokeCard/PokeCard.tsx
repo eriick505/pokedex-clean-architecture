@@ -16,7 +16,7 @@ export function PokeCard({ pokemon }: PokeCardProps) {
   return (
     <T.PokeCard onDoubleClick={handleDobleClick} role="button">
       <T.PokeImage
-        // onLoadingComplete={handleImageonLoadingComplete}
+        onLoad={handleImageonLoadingComplete}
         src={sourceGif}
         alt={pokemon.name}
         height={size.height}
